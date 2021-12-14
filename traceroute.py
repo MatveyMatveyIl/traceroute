@@ -5,6 +5,7 @@ from scapy.sendrecv import sr1
 from scapy.layers.inet import IP, TCP, ICMP, UDP
 from scapy.volatile import RandShort
 from scapy.layers.inet6 import IPv6
+from ipwhois import IPWhois, IPDefinedError
 
 
 class Traceroute:
@@ -76,10 +77,16 @@ class Traceroute:
             print(f'{num_ttl} *')
             return
         if self.verbose:
-            _as = ''
+            _as = self._get_asn()
             print(f'{num_ttl} {ans.src} {int(elapsed_time * 1000)}ms {_as}')
         else:
             print(f'{num_ttl} {ans.src} {int(elapsed_time * 1000)}ms')
+
+    def _get_asn(self):
+        try:
+            return IPWhois.lookup_whois(self.ip)['asn']
+        except IPDefinedError:
+            return '--'
 
 
 def main():
