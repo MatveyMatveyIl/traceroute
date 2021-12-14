@@ -1,8 +1,7 @@
 import argparse
-from scapy.sendrecv import sr
+from scapy.sendrecv import sr, sr1
 from scapy.layers.inet import IP, TCP, ICMP, UDP
-
-
+from scapy.volatile import RandShort
 
 
 class Traceroute:
@@ -13,6 +12,7 @@ class Traceroute:
         self.verbose = input_data.v
         self.protocol = input_data.protocol
         self.num = input_data.n
+        self.port = input_data.p
 
     # region input
     @staticmethod
@@ -33,17 +33,17 @@ class Traceroute:
     def find_route(self):
         package_maker = self._protocol_manager()
         for i in range(1, self.num):
-            pass
-
+            ans = sr1(package_maker(i), verbose=0, timeout=self.timeout)
+            print(i, ans.src)
 
     def _create_TCP_package(self, num):
-        pass
+        return IP(dst=self.ip, ttl=num) / TCP(dport=self.port, flags='S')
 
     def _create_UDP_package(self, num):
-        pass
+        return IP(dst=self.ip, ttl=num) / UDP(sport=RandShort(), dport=self.port)
 
     def _create_ICMP_package(self, num):
-        pass
+        return IP(dst=self.ip, ttl=num) / ICMP()
 
     def _protocol_manager(self):
         if self.protocol == 'tcp':
