@@ -43,6 +43,8 @@ class Traceroute:
             self._handle_output(ans=ans, elapsed_time=elapsed_time, num_ttl=num_ttl)
             if ans and ans.src == self.ip:
                 break
+            if ans is None:
+                break
 
     # package region
     def _create_tcp_package(self, num):
@@ -77,14 +79,14 @@ class Traceroute:
             print(f'{num_ttl} *')
             return
         if self.verbose:
-            _as = self._get_asn()
+            _as = self._get_asn(ans.src)
             print(f'{num_ttl} {ans.src} {int(elapsed_time * 1000)}ms {_as}')
         else:
             print(f'{num_ttl} {ans.src} {int(elapsed_time * 1000)}ms')
 
-    def _get_asn(self):
+    def _get_asn(self, ip):
         try:
-            return IPWhois.lookup_whois(self.ip)['asn']
+            return IPWhois(ip).lookup_whois()['asn']
         except IPDefinedError:
             return '--'
 
