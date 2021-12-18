@@ -43,8 +43,6 @@ class Traceroute:
             self._handle_output(ans=ans, elapsed_time=elapsed_time, num_ttl=num_ttl)
             if ans and ans.src == self.ip:
                 break
-            if ans is None:
-                break
 
     # package region
     def _create_tcp_package(self, num):
