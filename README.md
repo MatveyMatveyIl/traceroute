@@ -11,6 +11,7 @@ traceroute with the ability to send packets ICMP, TCP or UDP.
 ``sudo python3 -m traceroute -h``
 
 ### example
+`` traceroute [OPTIONS] IP_ADDRESS {tcp|udp|icmp} ``
 `` sudo python3 -m traceroute -p 53 1.1.1.1 tcp``
 
 ## Features
